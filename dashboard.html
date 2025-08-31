@@ -184,7 +184,7 @@
       let formData = new FormData();
       formData.append("pdf", file);
 
-      const response = await fetch("http://localhost:5000/upload-pdf", {
+      const response = await fetch("http://localhost:3000/upload-pdf", {
         method: "POST",
         body: formData
       });
@@ -197,12 +197,12 @@
     });
 
     function downloadExcel() {
-      window.location.href = "http://localhost:5000/download-excel";
+      window.location.href = "http://localhost:3000/download-excel";
     }
 
     async function exportToTally() {
       try {
-        const response = await fetch("http://localhost:5000/export-tally");
+        const response = await fetch("http://localhost:3000/export-tally");
         if (response.ok) {
           const text = await response.text();
           alert("✅ Export Success:\n" + text);
@@ -216,7 +216,7 @@
 
     async function importFromTally() {
       try {
-        const response = await fetch("http://localhost:5000/import-tally");
+        const response = await fetch("http://localhost:3000/import-tally");
         if (response.ok) {
           const data = await response.text();
           alert("✅ Import Success:\n" + data);

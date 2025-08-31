@@ -1,13 +1,11 @@
 {
-  "name": "talley_prime",
+  "name": "myapp",
   "version": "1.0.0",
-  "main": "db.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "express": "^4.21.2"
+  }
 }

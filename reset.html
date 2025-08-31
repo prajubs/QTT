@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reset Password</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+    }
+
+    .container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      width: 350px;
+      text-align: center;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      border-color: #0072ff;
+      box-shadow: 0 0 6px rgba(0,114,255,0.4);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0072ff;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #0056c9;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: red;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Set New Password</h2>
+    <input type="password" id="newPassword" placeholder="Enter new password" required>
+    <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
+    <button onclick="resetPassword()">Update</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    async function resetPassword() {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
+      const newPassword = document.getElementById("newPassword").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      const messageBox = document.getElementById("message");
+
+      // ✅ Check for missing token
+      if (!token) {
+        messageBox.textContent = "❌ Invalid or missing reset link.";
+        return;
+      }
+
+      // ✅ Validate passwords
+      if (!newPassword || !confirmPassword) {
+        messageBox.textContent = "⚠️ Please fill in both fields.";
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        messageBox.textContent = "❌ Passwords do not match!";
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:5000/reset-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, newPassword })
+        });
+
+        const result = await response.json();
+        messageBox.textContent = result.message;
+        messageBox.style.color = result.success ? "green" : "red";
+
+        if (result.success) {
+          setTimeout(() => {
+            window.location.href = "index.html"; // redirect to login
+          }, 1500);
+        }
+      } catch (error) {
+        messageBox.textContent = "❌ Server error. Please try again later.";
+      }
+    }
+  </script>
+</body>
+</html>
